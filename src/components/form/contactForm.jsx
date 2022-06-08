@@ -13,11 +13,11 @@ const ContactForm = ({ onSubmit }) => {
       case 'name':
         setName(value);
         break;
-      
+
       case 'number':
         setNumber(value);
         break;
-      
+
       default:
         return;
     }
@@ -26,10 +26,6 @@ const ContactForm = ({ onSubmit }) => {
   const handleSubmit = evt => {
     evt.preventDefault();
     onSubmit(name, number);
-    reset();
-  };
-
-  const reset = () => {
     setName('');
     setNumber('');
   };
