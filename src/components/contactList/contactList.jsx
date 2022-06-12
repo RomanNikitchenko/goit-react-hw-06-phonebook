@@ -1,5 +1,9 @@
 import React from 'react';
 import s from './contactList.module.css';
+
+import { connect } from 'react-redux';
+import todosActions from '../redux/phonebook/todos-actions';
+
 import PropTypes from 'prop-types';
 
 const ContactList = ({ visibleFilter, deleteContact }) => {
@@ -21,6 +25,26 @@ const ContactList = ({ visibleFilter, deleteContact }) => {
   );
 };
 
+const mapStateToProps = state => {
+  const { contacts, filter } = state.phonebook;
+
+  const normalizedFilter = filter.toLowerCase();
+
+  const visibleTodos = contacts.filter(({ name }) => {
+    return name.toLowerCase().includes(normalizedFilter);
+  });
+
+  return {
+    visibleFilter: visibleTodos,
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    deleteContact: id => dispatch(todosActions.deleteContact(id)),
+  };
+};
+
 ContactList.propTypes = {
   visibleFilter: PropTypes.arrayOf(
     PropTypes.shape({
@@ -32,4 +56,4 @@ ContactList.propTypes = {
   deleteContact: PropTypes.func.isRequired,
 };
 
-export default ContactList;
+export default connect(mapStateToProps, mapDispatchToProps)(ContactList);

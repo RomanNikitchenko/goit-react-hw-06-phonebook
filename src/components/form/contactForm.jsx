@@ -1,6 +1,7 @@
+import todosActions from '../redux/phonebook/todos-actions';
 import { useState } from 'react';
-
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 
 const ContactForm = ({ onSubmit }) => {
   const [name, setName] = useState('');
@@ -69,4 +70,8 @@ ContactForm.propTypes = {
   onSubmit: PropTypes.func.isRequired,
 };
 
-export default ContactForm;
+const mapDispatchToProps = dispatch => ({
+  onSubmit: (name, number) => dispatch(todosActions.addContact(name, number)),
+});
+
+export default connect(null, mapDispatchToProps)(ContactForm);
