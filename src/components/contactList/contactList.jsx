@@ -1,12 +1,24 @@
 import React from 'react';
 import s from './contactList.module.css';
-
-import { connect } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import todosActions from '../redux/phonebook/todos-actions';
 
-import PropTypes from 'prop-types';
+const getNormalizedFilter = state => {
+  const { items, filter } = state.phonebook;
 
-const ContactList = ({ visibleFilter, deleteContact }) => {
+  const normalizedFilter = filter.toLowerCase();
+
+  const visibleTodos = items.filter(({ name }) => {
+    return name.toLowerCase().includes(normalizedFilter);
+  });
+
+  return visibleTodos;
+};
+
+const ContactList = () => {
+  const visibleFilter = useSelector(getNormalizedFilter);
+  const dispatch = useDispatch();
+
   return (
     <ul>
       {visibleFilter.map(({ id, name, number }) => {
@@ -15,7 +27,10 @@ const ContactList = ({ visibleFilter, deleteContact }) => {
             <span>
               {name}: {number}
             </span>
-            <button type="button" onClick={() => deleteContact(id)}>
+            <button
+              type="button"
+              onClick={() => dispatch(todosActions.deleteContact(id))}
+            >
               delete
             </button>
           </li>
@@ -25,35 +40,64 @@ const ContactList = ({ visibleFilter, deleteContact }) => {
   );
 };
 
-const mapStateToProps = state => {
-  const { contacts, filter } = state.phonebook;
+export default ContactList;
 
-  const normalizedFilter = filter.toLowerCase();
+//
 
-  const visibleTodos = contacts.filter(({ name }) => {
-    return name.toLowerCase().includes(normalizedFilter);
-  });
+// import React from 'react';
+// import s from './contactList.module.css';
+// import { connect } from 'react-redux';
+// import todosActions from '../redux/phonebook/todos-actions';
+// import PropTypes from 'prop-types';
 
-  return {
-    visibleFilter: visibleTodos,
-  };
-};
+// const ContactList = ({ visibleFilter, deleteContact }) => {
+//   return (
+//     <ul>
+//       {visibleFilter.map(({ id, name, number }) => {
+//         return (
+//           <li key={id} className={s.item}>
+//             <span>
+//               {name}: {number}
+//             </span>
+//             <button type="button" onClick={() => deleteContact(id)}>
+//               delete
+//             </button>
+//           </li>
+//         );
+//       })}
+//     </ul>
+//   );
+// };
 
-const mapDispatchToProps = dispatch => {
-  return {
-    deleteContact: id => dispatch(todosActions.deleteContact(id)),
-  };
-};
+// const mapStateToProps = state => {
+//   const { items, filter } = state.phonebook;
 
-ContactList.propTypes = {
-  visibleFilter: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      name: PropTypes.string.isRequired,
-      number: PropTypes.string.isRequired,
-    })
-  ),
-  deleteContact: PropTypes.func.isRequired,
-};
+//   const normalizedFilter = filter.toLowerCase();
 
-export default connect(mapStateToProps, mapDispatchToProps)(ContactList);
+//   const visibleTodos = items.filter(({ name }) => {
+//     return name.toLowerCase().includes(normalizedFilter);
+//   });
+
+//   return {
+//     visibleFilter: visibleTodos,
+//   };
+// };
+
+// const mapDispatchToProps = dispatch => {
+//   return {
+//     deleteContact: id => dispatch(todosActions.deleteContact(id)),
+//   };
+// };
+
+// ContactList.propTypes = {
+//   visibleFilter: PropTypes.arrayOf(
+//     PropTypes.shape({
+//       id: PropTypes.string.isRequired,
+//       name: PropTypes.string.isRequired,
+//       number: PropTypes.string.isRequired,
+//     })
+//   ),
+//   deleteContact: PropTypes.func.isRequired,
+// };
+
+// export default connect(mapStateToProps, mapDispatchToProps)(ContactList);

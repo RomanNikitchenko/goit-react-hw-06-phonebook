@@ -12,7 +12,7 @@ const addContact = (state, payload) => {
   }
 };
 
-const contacts = createReducer([], {
+const items = createReducer([], {
   [actions.addContact]: (state, { payload }) => {
     return addContact(state, payload);
   },
@@ -28,7 +28,7 @@ const filter = createReducer('', {
 });
 
 export default combineReducers({
-  contacts: contacts,
+  items: items,
   filter: filter,
 });
 
